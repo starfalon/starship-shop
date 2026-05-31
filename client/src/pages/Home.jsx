@@ -24,71 +24,138 @@ function Home() {
   }, []);
 
   return (
-    <div style={{ background: "#0a0a0f", minHeight: "100vh" }}>
+    <div style={{ minHeight: "100vh" }}>
       {/* Hero */}
       <div
         style={{
-          background: "#0a0a0f",
-          padding: "80px 32px",
-          textAlign: "center",
+          position: "relative",
+          overflow: "hidden",
+          minHeight: "500px",
+          display: "flex",
+          alignItems: "center",
           borderBottom: "1px solid #1a1a2a",
+          padding: "0 64px",
         }}
       >
-        {/* Liten text ovanför rubriken */}
+        {/* bild till höger */}
+        <img
+          src="/images/hdestroyer.png"
+          alt="hero ship"
+          style={{
+            position: "absolute",
+            right: "-50px",
+            top: "50%",
+            transform: "translateY(-50%)",
+            width: "45%",
+            opacity: "0.9",
+            zIndex: "0",
+          }}
+        />
+
+        {/* gradient*/}
         <div
           style={{
-            fontSize: "11px",
-            color: "#C9A800",
-            letterSpacing: "3px",
-            marginBottom: "12px",
-            fontFamily: "'Exo 2', sans-serif",
+            position: "absolute",
+            inset: "0",
+            background:
+              "linear-gradient(90deg, #0a0a0f 25%, #0a0a0f88 50%, transparent 75%)",
+            zIndex: "1",
+          }}
+        />
+
+        {/* taglines */}
+        <div
+          style={{
+            position: "absolute",
+            left: "40%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: "2",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            alignItems: "center",
           }}
         >
-          IMPERIAL CLASS · SERIES IV
+          {[
+            "Ships from all factions and eras",
+            "Interest-free financing",
+            "100% Hyperspace Guarantee™",
+          ].map((text, i) => (
+            <div
+              key={i}
+              style={{
+                fontSize: "16px",
+                color: "#F0F0F0",
+                fontFamily: "'Exo 2', sans-serif",
+                letterSpacing: "0.5px",
+                borderLeft: "2px solid #FFE81F44",
+                paddingLeft: "10px",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {text}
+            </div>
+          ))}
         </div>
 
-        {/* Huvudrubrik */}
-        <h1
-          style={{
-            fontFamily: "Orbitron, sans-serif",
-            fontSize: "48px",
-            color: "#FFE81F",
-            letterSpacing: "4px",
-            margin: "0 0 16px",
-          }}
-        >
-          GALACTIC FLEET
-        </h1>
+        {/* Text vänster */}
+        <div style={{ position: "relative", zIndex: "2", maxWidth: "520px" }}>
+          <div
+            style={{
+              fontSize: "11px",
+              color: "#C9A800",
+              letterSpacing: "3px",
+              marginBottom: "16px",
+              fontFamily: "'Exo 2', sans-serif",
+            }}
+          >
+            IMPERIAL CLASS · SERIES IV
+          </div>
 
-        {/* underrubrik */}
-        <p
-          style={{
-            fontSize: "16px",
-            color: "#888899",
-            marginBottom: "32px",
-            fontFamily: "'Exo 2', sans-serif",
-          }}
-        >
-          Your source for ships from across the galaxy.
-        </p>
+          <h1
+            style={{
+              fontFamily: "Orbitron, sans-serif",
+              fontSize: "52px",
+              color: "#FFE81F",
+              letterSpacing: "4px",
+              margin: "0 0 16px",
+              lineHeight: "1.1",
+            }}
+          >
+            GALACTIC FLEET
+          </h1>
 
-        {/* CTA-knapp som leder till produktsidan */}
-        <Link
-          to="/products"
-          style={{
-            background: "#FFE81F",
-            color: "#0a0a0f",
-            padding: "12px 32px",
-            borderRadius: "4px",
-            textDecoration: "none",
-            fontSize: "14px",
-            fontWeight: "700",
-            fontFamily: "'Exo 2', sans-serif",
-            letterSpacing: "1px",
-          }}
-        >
-          Explore the Fleet
-        </Link>
+          <p
+            style={{
+              fontSize: "16px",
+              color: "#888899",
+              marginBottom: "32px",
+              fontFamily: "'Exo 2', sans-serif",
+              lineHeight: "1.6",
+            }}
+          >
+            Your source for ships from across the galaxy.
+          </p>
+
+          <Link
+            to="/products"
+            style={{
+              background: "#FFE81F",
+              color: "#0a0a0f",
+              padding: "12px 32px",
+              borderRadius: "4px",
+              textDecoration: "none",
+              fontSize: "14px",
+              fontWeight: "700",
+              fontFamily: "'Exo 2', sans-serif",
+              letterSpacing: "1px",
+              display: "inline-block",
+            }}
+          >
+            Explore the Fleet
+          </Link>
+        </div>
       </div>
 
       {/* utvalda produkter */}

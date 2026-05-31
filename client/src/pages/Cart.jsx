@@ -50,7 +50,7 @@ function Cart() {
   }
 
   return (
-    <div style={{ background: "#0a0a0f", minHeight: "100vh", padding: "32px" }}>
+    <div style={{ minHeight: "100vh", padding: "32px" }}>
       <h1
         style={{
           fontFamily: "Orbitron, sans-serif",

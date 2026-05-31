@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { createOrder } from "../api";
 
 function Checkout() {
   const { cartItems, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
 
-  // formens state, håller koll på vad användaren skriver in
+  // formens state (håller koll på vad användaren skriver in)
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,12 +19,15 @@ function Checkout() {
   // håller koll på valideringsfel
   const [errors, setErrors] = useState({});
 
+  // håller koll på om ordern skickas just nu
+  const [submitting, setSubmitting] = useState(false);
+
   // uppdaterar formData när användaren skriver i ett fält
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // validerar formuläret innan det skickas
+  // validerar formen innan det skickas
   const validate = () => {
     const newErrors = {};
     if (!formData.firstName) newErrors.firstName = "First name is required";
@@ -35,23 +39,51 @@ function Checkout() {
   };
 
   // hanterar formulärets submit
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // kör validering, om det nlir fel visas de utan att skicka
+    // kör validering (om fel finns visas de utan att skicka)
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    // tömmer varukorgen och navigerar till confirmation
-    clearCart();
-    navigate("/confirmation");
+    setSubmitting(true);
+
+    try {
+      // bygger ihop order-objektet som skickas till backenden
+      const orderData = {
+        items: cartItems.map((item) => ({
+          product_id: item._id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        total: totalPrice,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        paymentMethod: formData.paymentMethod,
+      };
+
+      // skickar ordern till backenden
+      await createOrder(orderData);
+
+      // tömmer varukorgen och navigerar till bekräftelsesidan
+      clearCart();
+      navigate("/confirmation");
+    } catch (err) {
+      console.error("Failed to create order", err);
+      setErrors({ submit: "Something went wrong. Please try again." });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div style={{ background: "#0a0a0f", minHeight: "100vh", padding: "32px" }}>
+    <div style={{ minHeight: "100vh", padding: "32px" }}>
       <h1
         style={{
           fontFamily: "Orbitron, sans-serif",
@@ -64,7 +96,7 @@ function Checkout() {
         CHECKOUT
       </h1>
 
-      {/* Tvåkolumnslayout (vänster: formulär, höger: ordersammanfattning) */}
+      {/* två kolumner: vänster: formulär, höger: ordersammanfattning */}
       <div
         style={{
           display: "grid",
@@ -72,7 +104,7 @@ function Checkout() {
           gap: "24px",
         }}
       >
-        {/* vänster: formulär */}
+        {/* vänster kolumn (form) */}
         <div>
           {/* Kontaktuppgifter */}
           <div
@@ -96,7 +128,7 @@ function Checkout() {
               CONTACT DETAILS
             </div>
 
-            {/* Förnamn och efternamn på samma rad */}
+            {/* Förnamn och efternamn*/}
             <div
               style={{
                 display: "grid",
@@ -114,7 +146,6 @@ function Checkout() {
                   placeholder="Luke"
                   style={inputStyle}
                 />
-                {/* visar felmeddelande om validering misslyckas */}
                 {errors.firstName && (
                   <div style={errorStyle}>{errors.firstName}</div>
                 )}
@@ -147,7 +178,7 @@ function Checkout() {
               {errors.email && <div style={errorStyle}>{errors.email}</div>}
             </div>
 
-            {/* Telefonnummer */}
+            {/* telefonnummer */}
             <div>
               <div style={labelStyle}>PHONE</div>
               <input
@@ -161,7 +192,7 @@ function Checkout() {
             </div>
           </div>
 
-          {/* Betalningsmetod */}
+          {/* betalningsmetod */}
           <div
             style={{
               background: "#12121a",
@@ -183,7 +214,6 @@ function Checkout() {
               PAYMENT METHOD
             </div>
 
-            {/* Två betalningsalternativ:kort och Swish */}
             <div
               style={{
                 display: "grid",
@@ -191,7 +221,7 @@ function Checkout() {
                 gap: "12px",
               }}
             >
-              {/* Kortbetalning */}
+              {/* kortbetalning */}
               <div
                 onClick={() =>
                   setFormData((prev) => ({ ...prev, paymentMethod: "card" }))
@@ -233,7 +263,7 @@ function Checkout() {
                 </div>
               </div>
 
-              {/* Swish */}
+              {/* swish */}
               <div
                 onClick={() =>
                   setFormData((prev) => ({ ...prev, paymentMethod: "swish" }))
@@ -277,28 +307,36 @@ function Checkout() {
             </div>
           </div>
 
-          {/* Skicka-knapp */}
+          {/*  felmeddelande om API-anropet misslyckas */}
+          {errors.submit && (
+            <div style={{ ...errorStyle, marginBottom: "12px" }}>
+              {errors.submit}
+            </div>
+          )}
+
+          {/* Skicka-knapp (inaktiveras medan ordern skickas) */}
           <button
             onClick={handleSubmit}
+            disabled={submitting}
             style={{
               width: "100%",
-              background: "#FFE81F",
+              background: submitting ? "#C9A800" : "#FFE81F",
               color: "#0a0a0f",
               border: "none",
               padding: "13px",
               fontSize: "13px",
               fontWeight: "700",
               borderRadius: "6px",
-              cursor: "pointer",
+              cursor: submitting ? "not-allowed" : "pointer",
               letterSpacing: "1px",
               fontFamily: "'Exo 2', sans-serif",
             }}
           >
-            Place Order →
+            {submitting ? "Placing Order..." : "Place Order →"}
           </button>
         </div>
 
-        {/* höger kolumn: ordersammanfattning */}
+        {/* höger kolumn (ordersammanfattning) */}
         <div
           style={{
             background: "#12121a",
@@ -320,7 +358,6 @@ function Checkout() {
             YOUR ORDER
           </div>
 
-          {/* lista över valda produkter */}
           {cartItems.map((item) => (
             <div
               key={item._id}
@@ -359,7 +396,6 @@ function Checkout() {
             }}
           />
 
-          {/* Shipping */}
           <div
             style={{
               display: "flex",
@@ -395,7 +431,6 @@ function Checkout() {
             }}
           />
 
-          {/* totalpris */}
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <span
               style={{
@@ -419,7 +454,6 @@ function Checkout() {
             </span>
           </div>
 
-          {/* säkerhetstext */}
           <div
             style={{
               display: "flex",
@@ -445,7 +479,6 @@ function Checkout() {
   );
 }
 
-// återanvändbar style för formuläret
 const labelStyle = {
   fontSize: "11px",
   color: "#888899",

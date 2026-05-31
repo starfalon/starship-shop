@@ -7,7 +7,7 @@ function Confirmation() {
   return (
     <div
       style={{
-        background: "#0a0a0f",
+        // background: "#0a0a0f",
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",

@@ -41,7 +41,7 @@ function Products() {
     return (
       <div
         style={{
-          background: "#0a0a0f",
+          // background: "#0a0a0f",
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
@@ -64,7 +64,7 @@ function Products() {
     return (
       <div
         style={{
-          background: "#0a0a0f",
+          // background: "#0a0a0f",
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
@@ -84,7 +84,7 @@ function Products() {
     );
 
   return (
-    <div style={{ background: "#0a0a0f", minHeight: "100vh", padding: "32px" }}>
+    <div style={{ minHeight: "100vh", padding: "32px" }}>
       {/* Sidans header med rubrik och antal visade produkter */}
       <div style={{ marginBottom: "24px" }}>
         <h1
