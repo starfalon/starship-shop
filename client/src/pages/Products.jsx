@@ -1,92 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
+import { getProducts } from "../api";
 
-// hårdkokdade produkter så länge
-const allProducts = [
-  {
-    _id: "1",
-    name: "X-Wing",
-    category: "Starfighters",
-    price: 149999,
-    length: "12.5m",
-    crew: "1 pilot + R2",
-    image: "",
-  },
-  {
-    _id: "2",
-    name: "TIE Fighter",
-    category: "Starfighters",
-    price: 89999,
-    length: "6.3m",
-    crew: "1 pilot",
-    image: "",
-  },
-  {
-    _id: "3",
-    name: "A-Wing",
-    category: "Starfighters",
-    price: 175000,
-    length: "9.6m",
-    crew: "1 pilot",
-    image: "",
-  },
-  {
-    _id: "4",
-    name: "Millennium Falcon",
-    category: "Freighters",
-    price: 104000,
-    length: "34.75m",
-    crew: "6 crew",
-    image: "",
-  },
-  {
-    _id: "5",
-    name: "Slave I",
-    category: "Freighters",
-    price: 98000,
-    length: "21.5m",
-    crew: "1 pilot",
-    image: "",
-  },
-  {
-    _id: "6",
-    name: "Star Destroyer",
-    category: "Capital Ships",
-    price: 899000,
-    length: "1,600m",
-    crew: "37,000 crew",
-    image: "",
-  },
-  {
-    _id: "7",
-    name: "Mon Calamari Cruiser",
-    category: "Capital Ships",
-    price: 650000,
-    length: "1,200m",
-    crew: "5,000 crew",
-    image: "",
-  },
-  {
-    _id: "8",
-    name: "Lambda Shuttle",
-    category: "Shuttles & Corvettes",
-    price: 59999,
-    length: "20m",
-    crew: "6 crew",
-    image: "",
-  },
-  {
-    _id: "9",
-    name: "Tantive IV",
-    category: "Shuttles & Corvettes",
-    price: 240000,
-    length: "150m",
-    crew: "165 crew",
-    image: "",
-  },
-];
-
-// kategorier för filterknappar
 const categories = [
   "All",
   "Starfighters",
@@ -96,19 +11,81 @@ const categories = [
 ];
 
 function Products() {
-  // activeCategory håller koll på vilket filter som är aktivt
   const [activeCategory, setActiveCategory] = useState("All");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // hämtar produkter från backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await getProducts();
+        setProducts(res.data);
+      } catch (err) {
+        setError("Failed to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   // filtrerar produkterna baserat på activeCategory
-  // om 'All' är valt visas alla produkter
   const filtered =
     activeCategory === "All"
-      ? allProducts
-      : allProducts.filter((p) => p.category === activeCategory);
+      ? products
+      : products.filter((p) => p.category === activeCategory);
+
+  if (loading)
+    return (
+      <div
+        style={{
+          background: "#0a0a0f",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "Orbitron, sans-serif",
+            color: "#FFE81F",
+            fontSize: "16px",
+          }}
+        >
+          Loading ships...
+        </div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div
+        style={{
+          background: "#0a0a0f",
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "Orbitron, sans-serif",
+            color: "#ff4444",
+            fontSize: "16px",
+          }}
+        >
+          {error}
+        </div>
+      </div>
+    );
 
   return (
     <div style={{ background: "#0a0a0f", minHeight: "100vh", padding: "32px" }}>
-      {/* sidans header med rubrik och antal visade produkter */}
+      {/* Sidans header med rubrik och antal visade produkter */}
       <div style={{ marginBottom: "24px" }}>
         <h1
           style={{
@@ -121,7 +98,7 @@ function Products() {
         >
           ALL SHIPS
         </h1>
-        {/* visar hur många produkter som matchar filtret */}
+        {/* Visar hur många produkter som matchar filtret */}
         <div
           style={{
             fontSize: "12px",
@@ -129,11 +106,11 @@ function Products() {
             fontFamily: "'Exo 2', sans-serif",
           }}
         >
-          Showing {filtered.length} of {allProducts.length} ships
+          Showing {filtered.length} of {products.length} ships
         </div>
       </div>
 
-      {/* filterknappar (en per kategori) */}
+      {/* Filterknappar */}
       <div
         style={{
           display: "flex",
@@ -150,7 +127,6 @@ function Products() {
               fontSize: "11px",
               padding: "6px 16px",
               borderRadius: "20px",
-              // aktiv knapp får gul border och text, inaktiv får grå
               border:
                 activeCategory === cat
                   ? "1px solid #FFE81F"
@@ -167,7 +143,7 @@ function Products() {
         ))}
       </div>
 
-      {/* Produktgrid (ett ProductCard per filtrerad produkt) */}
+      {/* Produktgrid (renderar ett ProductCard per filtrerad produkt) */}
       <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
         {filtered.map((product) => (
           <ProductCard key={product._id} product={product} />
