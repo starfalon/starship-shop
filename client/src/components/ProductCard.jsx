@@ -1,9 +1,21 @@
 // använder useCart för att lägga till i varukorgen
 import { useCart } from "../context/CartContext";
+import { useFavorites } from "../context/FavoritesContext";
 
 function ProductCard({ product }) {
   // hämtar addToCart från CartContext
   const { addToCart } = useCart();
+  const { addFavorite, removeFavorite, isFavorite } = useFavorites();
+
+  // toggla rfavorit
+  const handleFavorite = (e) => {
+    e.stopPropagation();
+    if (isFavorite(product._id)) {
+      removeFavorite(product._id);
+    } else {
+      addFavorite(product);
+    }
+  };
 
   return (
     <div
@@ -24,6 +36,7 @@ function ProductCard({ product }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          position: "relative",
         }}
       >
         <img
@@ -31,6 +44,29 @@ function ProductCard({ product }) {
           alt={product.name}
           style={{ maxHeight: "120px", maxWidth: "100%", objectFit: "contain" }}
         />
+
+        {/* favoritikon */}
+        <button
+          onClick={handleFavorite}
+          style={{
+            position: "absolute",
+            top: "8px",
+            right: "8px",
+            width: "28px",
+            height: "28px",
+            background: "#0a0a0f99",
+            border: "1px solid #2a2a3a",
+            borderRadius: "50%",
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "14px",
+            color: isFavorite(product._id) ? "#ff4444" : "#888899",
+          }}
+        >
+          {isFavorite(product._id) ? "♥" : "♡"}
+        </button>
       </div>
 
       <div style={{ padding: "14px" }}>
