@@ -1,12 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
+import useWindowSize from "../hooks/useWindowSize";
 
 function Navbar() {
   const { totalItems } = useCart();
   const { user, logout } = useAuth();
-  console.log(user);
+  const windowSize = useWindowSize();
   const navigate = useNavigate();
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
 
   const handleLogout = () => {
     logout();
@@ -18,11 +21,13 @@ function Navbar() {
       style={{
         background: "#1a1a2e",
         borderBottom: "1px solid #2a2a3a",
-        padding: "0 32px",
-        height: "70px",
+        padding: isMobile ? "12px 16px" : "0 32px",
+        height: isMobile ? "auto" : "70px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
+        flexWrap: isMobile ? "wrap" : "nowrap",
+        gap: isMobile ? "8px" : "0",
       }}
     >
       {/* logga */}
@@ -30,7 +35,7 @@ function Navbar() {
         to="/"
         style={{
           fontFamily: "Orbitron, sans-serif",
-          fontSize: "20px",
+          fontSize: isMobile ? "16px" : "20px",
           color: "#FFE81F",
           letterSpacing: "3px",
           textDecoration: "none",
@@ -41,7 +46,7 @@ function Navbar() {
       </Link>
 
       {/* nav-länkar */}
-      <div style={{ display: "flex", gap: "24px" }}>
+      <div style={{ display: "flex", gap: isMobile ? "12px" : "24px" }}>
         <Link to="/" style={navLink}>
           Home
         </Link>
@@ -58,15 +63,17 @@ function Navbar() {
         {user ? (
           // Inloggad (användarnamn och logout)
           <>
-            <span
-              style={{
-                fontSize: "15px",
-                color: "#FFE81F",
-                fontFamily: "'Exo 2', sans-serif",
-              }}
-            >
-              {user?.username}
-            </span>
+            {!isMobile && (
+              <span
+                style={{
+                  fontSize: "15px",
+                  color: "#FFE81F",
+                  fontFamily: "'Exo 2', sans-serif",
+                }}
+              >
+                {user?.username}
+              </span>
+            )}
             <button
               onClick={handleLogout}
               style={{
@@ -115,7 +122,7 @@ function Navbar() {
             fontFamily: "'Exo 2', sans-serif",
           }}
         >
-          View Cart ({totalItems})
+          {isMobile ? `🛒 (${totalItems})` : `View Cart (${totalItems})`}
         </Link>
       </div>
     </nav>

@@ -2,10 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { createOrder } from "../api";
+import useWindowSize from "../hooks/useWindowSize";
 
 function Checkout() {
   const { cartItems, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
 
   // formens state (håller koll på vad användaren skriver in)
   const [formData, setFormData] = useState({
@@ -83,11 +86,11 @@ function Checkout() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", padding: "32px" }}>
+    <div style={{ minHeight: "100vh", padding: isMobile ? "16px" : "32px" }}>
       <h1
         style={{
           fontFamily: "Orbitron, sans-serif",
-          fontSize: "20px",
+          fontSize: isMobile ? "16px" : "20px",
           color: "#F0F0F0",
           letterSpacing: "2px",
           marginBottom: "24px",
@@ -96,11 +99,11 @@ function Checkout() {
         CHECKOUT
       </h1>
 
-      {/* två kolumner: vänster: formulär, höger: ordersammanfattning */}
+      {/* två kolumner: vänster: formulär, höger: ordersammanfattning — staplas på mobil */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 320px",
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 320px",
           gap: "24px",
         }}
       >
@@ -128,11 +131,11 @@ function Checkout() {
               CONTACT DETAILS
             </div>
 
-            {/* Förnamn och efternamn*/}
+            {/* Förnamn och efternamn — staplas på mobil */}
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                 gap: "12px",
                 marginBottom: "12px",
               }}
@@ -233,7 +236,7 @@ function Checkout() {
                       ? "1px solid #FFE81F"
                       : "1px solid #2a2a3a",
                   borderRadius: "8px",
-                  padding: "16px",
+                  padding: isMobile ? "12px" : "16px",
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
@@ -275,7 +278,7 @@ function Checkout() {
                       ? "1px solid #FFE81F"
                       : "1px solid #2a2a3a",
                   borderRadius: "8px",
-                  padding: "16px",
+                  padding: isMobile ? "12px" : "16px",
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",

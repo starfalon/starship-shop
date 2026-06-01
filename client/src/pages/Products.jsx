@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "../components/ProductCard";
 import { getProducts } from "../api";
+import useWindowSize from "../hooks/useWindowSize";
 
 const categories = [
   "All",
@@ -15,6 +16,8 @@ function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
 
   // hämtar produkter från backend
   useEffect(() => {
@@ -41,7 +44,6 @@ function Products() {
     return (
       <div
         style={{
-          // background: "#0a0a0f",
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
@@ -64,7 +66,6 @@ function Products() {
     return (
       <div
         style={{
-          // background: "#0a0a0f",
           minHeight: "100vh",
           display: "flex",
           alignItems: "center",
@@ -84,13 +85,13 @@ function Products() {
     );
 
   return (
-    <div style={{ minHeight: "100vh", padding: "32px" }}>
+    <div style={{ minHeight: "100vh", padding: isMobile ? "16px" : "32px" }}>
       {/* Sidans header med rubrik och antal visade produkter */}
       <div style={{ marginBottom: "24px" }}>
         <h1
           style={{
             fontFamily: "Orbitron, sans-serif",
-            fontSize: "20px",
+            fontSize: isMobile ? "16px" : "20px",
             color: "#F0F0F0",
             letterSpacing: "2px",
             margin: "0 0 6px",
@@ -124,8 +125,8 @@ function Products() {
             key={cat}
             onClick={() => setActiveCategory(cat)}
             style={{
-              fontSize: "11px",
-              padding: "6px 16px",
+              fontSize: isMobile ? "10px" : "11px",
+              padding: isMobile ? "5px 12px" : "6px 16px",
               borderRadius: "20px",
               border:
                 activeCategory === cat
@@ -144,7 +145,14 @@ function Products() {
       </div>
 
       {/* Produktgrid (renderar ett ProductCard per filtrerad produkt) */}
-      <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "16px",
+          flexWrap: "wrap",
+          justifyContent: isMobile ? "center" : "flex-start",
+        }}
+      >
         {filtered.map((product) => (
           <ProductCard key={product._id} product={product} />
         ))}

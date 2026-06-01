@@ -13,3 +13,34 @@ body {
   position: relative;
   z-index: 1;
 }
+
+/* mobil */
+@media (max-width: 768px) {
+  /* Navbar */
+  .navbar {
+    padding: 0 16px;
+    height: auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+
+  /* Tvåkolumnslayout = en kolumn på mobil */
+  .two-column {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* grid */
+  .product-grid {
+    justify-content: center;
+  }
+
+  /* Hero */
+  .hero-image {
+    display: none;
+  }
+
+  .hero-tagline {
+    display: none;
+  }
+}

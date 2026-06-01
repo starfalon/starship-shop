@@ -1,16 +1,18 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import useWindowSize from "../hooks/useWindowSize";
 
 function Cart() {
   // hämtar från CartContext
   const { cartItems, removeFromCart, updateQuantity, totalPrice } = useCart();
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
 
   // om varukorgen är tom visas ett tomt state med länk tillbaka till produktsidan
   if (cartItems.length === 0) {
     return (
       <div
         style={{
-          background: "#0a0a0f",
           minHeight: "100vh",
           display: "flex",
           flexDirection: "column",
@@ -50,11 +52,11 @@ function Cart() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", padding: "32px" }}>
+    <div style={{ minHeight: "100vh", padding: isMobile ? "16px" : "32px" }}>
       <h1
         style={{
           fontFamily: "Orbitron, sans-serif",
-          fontSize: "20px",
+          fontSize: isMobile ? "16px" : "20px",
           color: "#F0F0F0",
           letterSpacing: "2px",
           marginBottom: "8px",
@@ -75,11 +77,11 @@ function Cart() {
         {cartItems.length} {cartItems.length === 1 ? "ship" : "ships"} selected
       </div>
 
-      {/* vänster: varor, höger: sammanfattning */}
+      {/* vänster: varor, höger: sammanfattning — staplas på mobil */}
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 320px",
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 320px",
           gap: "24px",
         }}
       >
@@ -98,29 +100,31 @@ function Cart() {
                 alignItems: "center",
               }}
             >
-              {/* Produktbild */}
-              <div
-                style={{
-                  width: "80px",
-                  height: "60px",
-                  background: "#0d0d18",
-                  borderRadius: "6px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexShrink: 0,
-                }}
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
+              {/* Produktbild — döljs på mobil */}
+              {!isMobile && (
+                <div
                   style={{
-                    maxHeight: "50px",
-                    maxWidth: "70px",
-                    objectFit: "contain",
+                    width: "80px",
+                    height: "60px",
+                    background: "#0d0d18",
+                    borderRadius: "6px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    flexShrink: 0,
                   }}
-                />
-              </div>
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    style={{
+                      maxHeight: "50px",
+                      maxWidth: "70px",
+                      objectFit: "contain",
+                    }}
+                  />
+                </div>
+              )}
 
               {/* Produktinfo */}
               <div style={{ flex: 1 }}>
@@ -136,7 +140,7 @@ function Cart() {
                 </div>
                 <div
                   style={{
-                    fontSize: "14px",
+                    fontSize: isMobile ? "13px" : "14px",
                     fontWeight: "500",
                     color: "#F0F0F0",
                     fontFamily: "'Exo 2', sans-serif",
@@ -158,7 +162,7 @@ function Cart() {
                 {/* totalpris för denna rad (pris × quantity) */}
                 <div
                   style={{
-                    fontSize: "14px",
+                    fontSize: isMobile ? "13px" : "14px",
                     color: "#FFE81F",
                     fontWeight: "500",
                     fontFamily: "'Exo 2', sans-serif",
