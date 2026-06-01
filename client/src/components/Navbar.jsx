@@ -1,9 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 
 function Navbar() {
-  // hämtar totalItems från CartContext
   const { totalItems } = useCart();
+  const { user, logout } = useAuth();
+  console.log(user);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <nav
@@ -17,7 +25,7 @@ function Navbar() {
         justifyContent: "space-between",
       }}
     >
-      {/* logga/länk till home */}
+      {/* logga */}
       <Link
         to="/"
         style={{
@@ -32,7 +40,7 @@ function Navbar() {
         GALACTIC FLEET
       </Link>
 
-      {/* navbarlänkar*/}
+      {/* nav-länkar */}
       <div style={{ display: "flex", gap: "24px" }}>
         <Link to="/" style={navLink}>
           Home
@@ -42,27 +50,75 @@ function Navbar() {
         </Link>
       </div>
 
-      {/* cartknapp */}
-      <Link
-        to="/cart"
-        style={{
-          fontSize: "16px",
-          color: "#FFE81F",
-          border: "1px solid #FFE81F44",
-          padding: "5px 14px",
-          borderRadius: "4px",
-          textDecoration: "none",
-          fontWeight: "700",
-          fontFamily: "'Exo 2', sans-serif",
-        }}
-      >
-        View Cart ({totalItems})
-      </Link>
+      {/* login/logout och varukorg */}
+      <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        {user ? (
+          // Inloggad (användarnamn och logout)
+          <>
+            <span
+              style={{
+                fontSize: "15px",
+                color: "#FFE81F",
+                fontFamily: "'Exo 2', sans-serif",
+              }}
+            >
+              {user?.username}
+            </span>
+            <button
+              onClick={handleLogout}
+              style={{
+                fontSize: "15px",
+                color: "#888899",
+                background: "none",
+                border: "1px solid #2a2a3a",
+                padding: "5px 14px",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontFamily: "'Exo 2', sans-serif",
+              }}
+            >
+              Sign Out
+            </button>
+          </>
+        ) : (
+          // inte inloggad (Sign In-knapp)
+          <Link
+            to="/login"
+            style={{
+              fontSize: "15px",
+              color: "#FFE81F",
+              border: "1px solid #FFE81F44",
+              padding: "5px 14px",
+              borderRadius: "4px",
+              textDecoration: "none",
+              fontFamily: "'Exo 2', sans-serif",
+            }}
+          >
+            Sign In
+          </Link>
+        )}
+
+        {/* cart */}
+        <Link
+          to="/cart"
+          style={{
+            fontSize: "15px",
+            color: "#FFE81F",
+            border: "1px solid #FFE81F44",
+            padding: "5px 14px",
+            borderRadius: "4px",
+            textDecoration: "none",
+            fontWeight: "700",
+            fontFamily: "'Exo 2', sans-serif",
+          }}
+        >
+          View Cart ({totalItems})
+        </Link>
+      </div>
     </nav>
   );
 }
 
-// återanvändbar style för navbarlänkar
 const navLink = {
   fontSize: "15px",
   color: "#888899",

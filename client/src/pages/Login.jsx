@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { loginUser } from "../api";
+import { useAuth } from "../context/AuthContext";
+import { loginUser, getCurrentUser } from "../api";
 
 function Login() {
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   // formens state
@@ -26,13 +28,16 @@ function Login() {
     setLoading(true);
 
     try {
-      // skickar login-request till backenden
       const res = await loginUser(formData);
 
-      // sparar JWT-token i localStorage
+      // Sparar token först
       localStorage.setItem("token", res.data.accessToken);
 
-      // navigerar till startsidan efter inloggning
+      // Hämtar användardata med den nya token
+      const userRes = await getCurrentUser();
+
+      // Sparar token och användardata separat i AuthContext
+      login(res.data.accessToken, userRes.data);
       navigate("/");
     } catch (err) {
       setError("Invalid email or password");
