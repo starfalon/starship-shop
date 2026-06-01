@@ -19,7 +19,7 @@ app.use(
 app.use(express.json());
 
 // Routes
-app.use("/api/contacts", require("./routers/contactRoutes"));
+
 app.use("/api/users", require("./routers/userRoutes"));
 app.use("/api/products", require("./routers/productRoutes"));
 app.use("/api/orders", require("./routers/orderRoutes"));
