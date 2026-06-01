@@ -23,6 +23,7 @@ function Confirmation() {
           background: "#FFE81F15",
           border: "1px solid #FFE81F44",
           borderRadius: "50%",
+          color: "#FFE81F",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
