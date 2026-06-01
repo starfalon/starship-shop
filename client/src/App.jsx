@@ -7,6 +7,7 @@ import Confirmation from "./pages/Confirmation";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Navbar from "./components/Navbar";
+import Favorites from "./pages/Favorites";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/confirmation" element={<Confirmation />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/favorites" element={<Favorites />} />
       </Routes>
     </BrowserRouter>
   );

@@ -48,6 +48,9 @@ function Navbar() {
         <Link to="/products" style={navLink}>
           All Ships
         </Link>
+        <Link to="/favorites" style={navLink}>
+          Favorites
+        </Link>
       </div>
 
       {/* login/logout och varukorg */}
