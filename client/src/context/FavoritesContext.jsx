@@ -1,12 +1,19 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 const FavoritesContext = createContext();
 
 export function FavoritesProvider({ children }) {
-  // favorites är en array av produkter
-  const [favorites, setFavorites] = useState([]);
+  // läser favoriter från localStorage vid start om de finns
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
 
-  // lägger till en produkt i favoriter om den inte redan finns
+  // sparar favoriter till localStorage varje gång de ändras
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
   const addFavorite = (product) => {
     setFavorites((prev) => {
       const existing = prev.find((item) => item._id === product._id);
@@ -15,12 +22,10 @@ export function FavoritesProvider({ children }) {
     });
   };
 
-  // tar bort en produkt från favoriter baserat på id
   const removeFavorite = (id) => {
     setFavorites((prev) => prev.filter((item) => item._id !== id));
   };
 
-  // kollar om en produkt redan är i favoriter
   const isFavorite = (id) => {
     return favorites.some((item) => item._id === id);
   };
@@ -34,7 +39,6 @@ export function FavoritesProvider({ children }) {
   );
 }
 
-// custom hook för att komma åt FavoritesContext
 export function useFavorites() {
   return useContext(FavoritesContext);
 }
