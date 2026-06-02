@@ -36,11 +36,11 @@ function Home() {
           minHeight: isMobile ? "300px" : "500px",
           display: "flex",
           alignItems: "center",
-          borderBottom: "1px solid #1a1a2a",
+          // borderBottom: "1px solid #1a1a2a",
           padding: isMobile ? "24px" : "0 64px",
         }}
       >
-        {/* bild till höger — döljs på mobil */}
+        {/* bild till höger (döljs på mobil) */}
         {!isMobile && (
           <img
             src="/images/hdestroyer.png"
@@ -57,7 +57,7 @@ function Home() {
           />
         )}
 
-        {/* gradient — döljs på mobil */}
+        {/* gradient (döljs på mobil) */}
         {!isMobile && (
           <div
             style={{
@@ -70,7 +70,7 @@ function Home() {
           />
         )}
 
-        {/* taglines — döljs på mobil */}
+        {/* taglines (döljs på mobil) */}
         {!isMobile && (
           <div
             style={{

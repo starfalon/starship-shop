@@ -80,7 +80,7 @@ function Navbar() {
                 fontSize: "15px",
                 color: "#888899",
                 background: "none",
-                border: "1px solid #2a2a3a",
+                border: "2px solid #2a2a3a",
                 padding: "5px 14px",
                 borderRadius: "4px",
                 cursor: "pointer",
@@ -97,7 +97,7 @@ function Navbar() {
             style={{
               fontSize: "15px",
               color: "#FFE81F",
-              border: "1px solid #FFE81F44",
+              border: "2px solid #FFE81F44",
               padding: "5px 14px",
               borderRadius: "4px",
               textDecoration: "none",
@@ -114,7 +114,7 @@ function Navbar() {
           style={{
             fontSize: "15px",
             color: "#FFE81F",
-            border: "1px solid #FFE81F44",
+            border: "2px solid #FFE81F44",
             padding: "5px 14px",
             borderRadius: "4px",
             textDecoration: "none",
