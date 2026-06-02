@@ -31,10 +31,8 @@ cd starship-shop
 cd server
 npm install
 
-3. Create a .env file in the server/ folder:
-   PORT=5000
-   CONNECTION_STRING=your_mongodb_connection_string
-   ACCESS_TOKEN_SECRET=your_secret_key
+3. Create a .env file in the server/ folder
+   
 
 4. Seed the database with products and default user:
 
